@@ -113,7 +113,7 @@
 
     <script>
       // Load Data from Local Storage or Initialize with Default Data
-      let data = JSON.parse(localStorage.getItem("data"));
+      let data = JSON.parse(localStorage.getItem("data")) || []
 
       // Save Data to Local Storage
       function saveData() {
