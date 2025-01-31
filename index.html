@@ -15,6 +15,12 @@
       type="image/svg+xml"
       href="data:image/svg+xml,%3Csvg%20fill%3D%22%23FFFFFF%22%20width%3D%22800px%22%20height%3D%22800px%22%20viewBox%3D%220%200%2024%2024%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M8%2C7%20L8%2C8%20L6.5%2C8%20C5.67157288%2C8%205%2C8.67157288%205%2C9.5%20L5%2C18.5%20C5%2C19.3284271%205.67157288%2C20%206.5%2C20%20L13.5%2C20%20C14.3284271%2C20%2015%2C19.3284271%2015%2C18.5%20L15%2C17%20L16%2C17%20L16%2C18.5%20C16%2C19.8807119%2014.8807119%2C21%2013.5%2C21%20L6.5%2C21%20C5.11928813%2C21%204%2C19.8807119%204%2C18.5%20L4%2C9.5%20C4%2C8.11928813%205.11928813%2C7%206.5%2C7%20L8%2C7%20Z%20M16%2C4%20L10.5%2C4%20C9.67157288%2C4%209%2C4.67157288%209%2C5.5%20L9%2C14.5%20C9%2C15.3284271%209.67157288%2C16%2010.5%2C16%20L17.5%2C16%20C18.3284271%2C16%2019%2C15.3284271%2019%2C14.5%20L19%2C7%20L16.5%2C7%20C16.2238576%2C7%2016%2C6.77614237%2016%2C6.5%20L16%2C4%20Z%20M20%2C6.52797748%20L20%2C14.5%20C20%2C15.8807119%2018.8807119%2C17%2017.5%2C17%20L10.5%2C17%20C9.11928813%2C17%208%2C15.8807119%208%2C14.5%20L8%2C5.5%20C8%2C4.11928813%209.11928813%2C3%2010.5%2C3%20L16.4720225%2C3%20C16.6047688%2C2.99158053%2016.7429463%2C3.03583949%2016.8535534%2C3.14644661%20L19.8535534%2C6.14644661%20C19.9641605%2C6.25705373%2020.0084195%2C6.39523125%2020%2C6.52797748%20Z%20M17%2C6%20L18.2928932%2C6%20L17%2C4.70710678%20L17%2C6%20Z%20M11.5%2C13%20C11.2238576%2C13%2011%2C12.7761424%2011%2C12.5%20C11%2C12.2238576%2011.2238576%2C12%2011.5%2C12%20L13.5%2C12%20C13.7761424%2C12%2014%2C12.2238576%2014%2C12.5%20C14%2C12.7761424%2013.7761424%2C13%2013.5%2C13%20L11.5%2C13%20Z%20M11.5%2C11%20C11.2238576%2C11%2011%2C10.7761424%2011%2C10.5%20C11%2C10.2238576%2011.2238576%2C10%2011.5%2C10%20L16.5%2C10%20C16.7761424%2C10%2017%2C10.2238576%2017%2C10.5%20C17%2C10.7761424%2016.7761424%2C11%2016.5%2C11%20L11.5%2C11%20Z%20M11.5%2C9%20C11.2238576%2C9%2011%2C8.77614237%2011%2C8.5%20C11%2C8.22385763%2011.2238576%2C8%2011.5%2C8%20L16.5%2C8%20C16.7761424%2C8%2017%2C8.22385763%2017%2C8.5%20C17%2C8.77614237%2016.7761424%2C9%2016.5%2C9%20L11.5%2C9%20Z%22%20%2F%3E%3C%2Fsvg%3E"
     />
+    <style>
+      .content-center {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    </style>
   </head>
   <body class="bg-gray-900 text-white font-sans pt-2.5">
     <div class="container mx-2 p-1">
@@ -33,6 +39,14 @@
         onclick="openModal()"
       >
         Add New
+      </button>
+
+      <!-- Alignment Toggle Button -->
+      <button
+        class="bg-yellow-600 hover:bg-yellow-500 text-white py-2 px-4 rounded fixed top-4 right-32"
+        onclick="toggleAlignment()"
+      >
+        Toggle Alignment
       </button>
     </div>
 
@@ -115,6 +129,15 @@
     <script>
       // Load Data from Local Storage or Initialize with Default Data
       let data = JSON.parse(localStorage.getItem("data")) || [];
+      let alignCenter =
+        JSON.parse(localStorage.getItem("alignCenter")) || false;
+
+      // Toggle Alignment and save to localStorage
+      function toggleAlignment() {
+        alignCenter = !alignCenter;
+        localStorage.setItem("alignCenter", JSON.stringify(alignCenter)); // Save state
+        renderData();
+      }
 
       // Save Data to Local Storage
       function saveData() {
@@ -126,15 +149,25 @@
         const container = document.getElementById("content-container");
         container.innerHTML = "";
 
+        // Apply alignment based on the stored state
+        if (alignCenter) {
+          container.classList.add("content-center");
+        } else {
+          container.classList.remove("content-center");
+        }
+
+        // Render the rest of the items
         data.forEach((item, index) => {
           const div = document.createElement("div");
           div.className =
             "flex items-center justify-between bg-gray-800 p-4 rounded-lg mb-4 ml-0 max-w-full min-w-[506px]";
           div.innerHTML = `
-      <h3 class="text-lg whitespace-nowrap max-w-full">
-        ${index + 1}) ${item.value}  <!-- Added number before each value -->
-      </h3>
-      <div class="flex items-center space-x-2">
+      <div class="flex items-center overflow-x-auto whitespace-nowrap max-w-full pr-4">
+        <h3 class="text-lg">
+          ${index + 1}) ${item.value} <!-- Added number before each value -->
+        </h3>
+      </div>
+      <div class="flex items-center ml-8 space-x-2 flex-shrink-0 w-[150px]">
         <button
           class="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded flex items-center"
           onclick="copyText('${item.value}')"
@@ -202,13 +235,6 @@
       // Add New Item
       function addItem() {
         const newValue = document.getElementById("new-item").value.trim();
-
-        if (newValue.length > 30) {
-          displayAlertError(
-            "Please enter a value with less than 30 characters!"
-          );
-          return;
-        }
 
         if (!newValue) {
           displayAlertError("please enter a value!");
